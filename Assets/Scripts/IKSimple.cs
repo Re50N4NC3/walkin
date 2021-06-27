@@ -14,8 +14,8 @@ public class IKSimple : MonoBehaviour{
     
     public Transform effector;
 
-    float baseLen;
-    float endLen;
+    public float baseLen;
+    public float endLen;
     float targetLen;
 
     float baseLenStart;
@@ -24,6 +24,7 @@ public class IKSimple : MonoBehaviour{
 
     float limbLenScale = 0.25f;
     float angleScale = 0.8f;
+    float baseToTargetRatio;
 
     void Start(){
         baseLen = Vector3.Distance(basePoint.position, midPoint.position);
@@ -33,11 +34,13 @@ public class IKSimple : MonoBehaviour{
         baseLenStart = baseLen;
         endLenStart = endLen;
         targetLenStart = targetLen;
+
+        baseToTargetRatio = baseLen / targetLenStart;
     }
 
     void Update(){
-
         targetLen = Vector3.Distance(basePoint.position, effector.position);
+        ChangePerspective();
 
         // get angles
         float baseToTargetAngle = PointAngle(basePoint.position, effector.position);
@@ -50,7 +53,7 @@ public class IKSimple : MonoBehaviour{
         // if point is reachable calculate new angles
         if (baseLen + endLen > targetLen){
             float cosAngle0 = (((targetLen * targetLen) + (baseLen * baseLen) - (endLen * endLen)) / (2 * targetLen * baseLen));
-            float angle0 = Mathf.Acos(cosAngle0) * Mathf.Rad2Deg;// * (-rotationDirectionMultipler * angleScale);
+            float angle0 = Mathf.Acos(cosAngle0) * Mathf.Rad2Deg * Mathf.Sign(-rotationDirectionMultipler);// * (-rotationDirectionMultipler * angleScale);
             
             angleBaseToMid = baseToTargetAngle - angle0;
             angleMidToEnd =  midToTargetAngle;
@@ -58,14 +61,17 @@ public class IKSimple : MonoBehaviour{
         
         midPoint.position = PointTowards(angleBaseToMid, basePoint.position, baseLen);
         endPoint.position = PointTowards(angleMidToEnd, midPoint.position, endLen);
-        ChangePerspective();
     }
 
     void ChangePerspective(){
         rotationDirectionMultipler = controller.rotationDirectionMultipler;
 
-        baseLen = baseLenStart + limbLenScale * Mathf.Abs(rotationDirectionMultipler);
-        endLen = endLenStart + limbLenScale * Mathf.Abs(rotationDirectionMultipler);
+        float baseIni = (targetLen * baseToTargetRatio);
+        float endIni = (targetLen * (1 - baseToTargetRatio));
+
+        // divide by 10 to prevent limb splitting
+        baseLen = baseIni + (baseLenStart) * baseToTargetRatio * Mathf.Abs(rotationDirectionMultipler) / 10;
+        endLen = endIni + (baseLenStart) * (1 - baseToTargetRatio) * Mathf.Abs(rotationDirectionMultipler) / 10;
     }
 
     #region Math functions
