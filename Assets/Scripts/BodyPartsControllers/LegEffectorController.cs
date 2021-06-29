@@ -18,7 +18,7 @@ public class LegEffectorController : MonoBehaviour{
     [SerializeField]
     float phase = 0;
     
-    float animationSpeed = 1.0f;
+    float animationSpeed = 0.6f;
     float characterMoveMagnitude;
 
     // Update is called once per frame
@@ -33,8 +33,8 @@ public class LegEffectorController : MonoBehaviour{
             deltaY = Mathf.Cos((phase + phaseMove)* Mathf.Deg2Rad );
         }
         else{
-            deltaX = Mathf.Lerp(deltaX, 0, Time.deltaTime / 0.2f);
-            deltaY = Mathf.Lerp(deltaY, 0, Time.deltaTime / 0.2f);
+            deltaX = Mathf.Lerp(deltaX, 0, Time.deltaTime / 0.3f);
+            deltaY = Mathf.Lerp(deltaY, 0, Time.deltaTime / 0.3f);
             phase = 0;
         }
 
@@ -43,19 +43,16 @@ public class LegEffectorController : MonoBehaviour{
     }
 
     void ChangePhase(){
-        phase += (characterMoveMagnitude / animationSpeed) * Mathf.Sign(characterMovement.velX) * Mathf.Sign(rotationDirectionMultipler);
+        phase += (characterMoveMagnitude * animationSpeed) * Mathf.Sign(characterMovement.velX) * Mathf.Sign(rotationDirectionMultipler);
 
-        if (phase > 360){
-            phase -= 360;
-        }
-        if (phase < 0){
-            phase += 360;
-        }
+        if (phase >= 360){ phase -= 360; }
+        if (phase < 0){ phase += 360; }
     }
 
     void ChangePosition(){
-        deltaY = Mathf.Clamp(deltaY, 0, 99);
-        Vector3 pos = new Vector3(effectorBasePosition.transform.position.x + (deltaX * rotationDirectionMultipler), effectorBasePosition.transform.position.y + deltaY);
+        // these numbers just look good on y scale
+        deltaY = Mathf.Clamp(deltaY, -0.2f, 99);
+        Vector3 pos = new Vector3(effectorBasePosition.transform.position.x + (deltaX * (Mathf.Sign(rotationDirectionMultipler) * Mathf.Abs((characterMovement.velX)/ characterMovement.maxSpeed))), effectorBasePosition.transform.position.y + deltaY);
         transform.position = pos;
     }
 }

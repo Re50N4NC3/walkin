@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class Pseudo3DController : MonoBehaviour{
     [Range(-1.0f, 1.0f)]
+
     public float rotationDirectionMultipler = 0;
+    public float directionMultiplerY = 0;
+
     public Vector3 lookPoint;
 
     // Update is called once per frame
@@ -14,5 +17,6 @@ public class Pseudo3DController : MonoBehaviour{
 
     void CalculateRotationFromLook(){
         rotationDirectionMultipler = lookPoint.normalized.x;
+        directionMultiplerY = lookPoint.normalized.y;
     }
 }

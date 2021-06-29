@@ -38,13 +38,13 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\IKSimple.cs" />
      <Compile Include="Assets\Scripts\CharacterMovement.cs" />
-     <Compile Include="Assets\Scripts\InputSystem\inputSystem.cs" />
-     <Compile Include="Assets\Scripts\BodyPartsControllers\LimbSimple.cs" />
-     <Compile Include="Assets\Scripts\MouseController.cs" />
-     <Compile Include="Assets\Scripts\Pseudo3DController.cs" />
-     <Compile Include="Assets\Scripts\BodyPartsControllers\HeadController.cs" />
      <Compile Include="Assets\Scripts\BodyPartsControllers\LegEffectorController.cs" />
+     <Compile Include="Assets\Scripts\Pseudo3DController.cs" />
+     <Compile Include="Assets\Scripts\MouseController.cs" />
      <Compile Include="Assets\Scripts\BodyPartsControllers\BodyController.cs" />
+     <Compile Include="Assets\Scripts\BodyPartsControllers\LimbSimple.cs" />
+     <Compile Include="Assets\Scripts\InputSystem\inputSystem.cs" />
+     <Compile Include="Assets\Scripts\BodyPartsControllers\ArmEffectorController.cs" />
     <Reference Include="UnityEngine">
         <HintPath>/home/fas/Unity/2020.3.12f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

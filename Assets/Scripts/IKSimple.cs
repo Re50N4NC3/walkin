@@ -22,9 +22,11 @@ public class IKSimple : MonoBehaviour{
     float endLenStart;
     float targetLenStart;
 
-    float limbLenScale = 0.25f;
-    float angleScale = 0.8f;
+    float limbLenDiv = 10.0f;
     float baseToTargetRatio;
+
+    [SerializeField]
+    int angleDirection = 1;
 
     void Start(){
         baseLen = Vector3.Distance(basePoint.position, midPoint.position);
@@ -53,7 +55,7 @@ public class IKSimple : MonoBehaviour{
         // if point is reachable calculate new angles
         if (baseLen + endLen > targetLen){
             float cosAngle0 = (((targetLen * targetLen) + (baseLen * baseLen) - (endLen * endLen)) / (2 * targetLen * baseLen));
-            float angle0 = Mathf.Acos(cosAngle0) * Mathf.Rad2Deg * Mathf.Sign(-rotationDirectionMultipler);// * (-rotationDirectionMultipler * angleScale);
+            float angle0 = Mathf.Acos(cosAngle0) * Mathf.Rad2Deg * Mathf.Sign(-rotationDirectionMultipler) * angleDirection;
             
             angleBaseToMid = baseToTargetAngle - angle0;
             angleMidToEnd =  midToTargetAngle;
@@ -69,9 +71,9 @@ public class IKSimple : MonoBehaviour{
         float baseIni = (targetLen * baseToTargetRatio);
         float endIni = (targetLen * (1 - baseToTargetRatio));
 
-        // divide by 10 to prevent limb splitting
-        baseLen = baseIni + (baseLenStart) * baseToTargetRatio * Mathf.Abs(rotationDirectionMultipler) / 10;
-        endLen = endIni + (baseLenStart) * (1 - baseToTargetRatio) * Mathf.Abs(rotationDirectionMultipler) / 10;
+        // divide by limbLenDiv to prevent limb splitting
+        baseLen = baseIni + (baseLenStart) * baseToTargetRatio * Mathf.Abs(rotationDirectionMultipler) / limbLenDiv;
+        endLen = endIni + (baseLenStart) * (1 - baseToTargetRatio) * Mathf.Abs(rotationDirectionMultipler) / limbLenDiv;
     }
 
     #region Math functions
